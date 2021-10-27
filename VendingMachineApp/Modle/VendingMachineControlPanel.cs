@@ -11,7 +11,6 @@ namespace VendingMachineApp.Modle
     {
         readonly MoneyPool moneyPool = new MoneyPool();
         readonly VendingMachine vendingMachine = new VendingMachine();
-        readonly ProductRepo productRepo = new ProductRepo();
 
         // Method to show the products and the current balance 
         public void MainScreen()
@@ -24,7 +23,7 @@ namespace VendingMachineApp.Modle
             Console.WriteLine("     |_______________________________________________________|\n ");
 
             Console.ForegroundColor = ConsoleColor.Yellow;
-            vendingMachine.ShowAll(productRepo.GetAllProduct());
+            vendingMachine.ShowAll(MachineStock.GetAllProduct());
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("\n__________________________________________________________\n");
             Console.Write("Current Balance:");
@@ -33,10 +32,10 @@ namespace VendingMachineApp.Modle
         public void ShowAllProductInfo()
         {
             Console.Clear();
-            var products = productRepo.GetAllProduct();
+            var products = MachineStock.GetAllProduct();
             Console.WriteLine($"The available products on our vending machine \n");
             Console.ForegroundColor = ConsoleColor.Cyan;
-            foreach (var item in products) productRepo.Examine(item);
+            foreach (var item in products) item.Examine(item);
             Console.WriteLine("Backing to the main Menu in few second");
             Console.ForegroundColor = ConsoleColor.White;
             System.Threading.Thread.Sleep(8000);
@@ -46,6 +45,7 @@ namespace VendingMachineApp.Modle
         // Method for vending machine process
         public bool BuyFromMachine()
         {
+           
             ConsoleKey key;
             MainScreen();
             /// 
@@ -79,7 +79,7 @@ namespace VendingMachineApp.Modle
                   key = Console.ReadKey(true).Key;
                 if (key == ConsoleKey.Add)
                 {
-                    Console.Write($"Current balance :[{moneyPool.GetBalance()}]kr Please Add the money you need");
+                    Console.Write($"Current balance :[{moneyPool.GetBalance()}]kr Please Add the money you need: ");
                     vendingMachine.InsertMoney(Console.ReadLine());
                 }
             } while (key != ConsoleKey.Spacebar);

@@ -1,39 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using VendingMachineApp.Data;
 
 namespace VendingMachineApp.Modle
 {
     public abstract class Product
     {
-        public Product()
-        { }
-        public Product (int productId)
+        public Product(string productName,int price, string productDescription)
         {
-            ProductId = productId;
+            ProductId = StockItemSequencer.NextStockItemId();
+            ProductName = productName;
+            Price = price;
+            ProductDescription = productDescription;
         }
-        public int ProductId{ get;  set; }
+
+        public Product(Product product)
+        {
+            ProductId = product.ProductId;
+            ProductName = product.ProductName;
+            Price = product.Price;
+            ProductDescription = product.ProductDescription;
+        }
+
+        public  int ProductId { get; set; }
         public string ProductName { get; set; }
-        private int price;
+        private  int _price { get; set; }
         public string ProductDescription { get; set; }
         public string UsageInformation { get; set; }
 
         public int Price
         {
-            get { return price; }
+            get { return _price; }
             set
             {
                 if (value <= 0)
                     throw new ArgumentException("Price of product can not be equal to zero");
                 else
-                    price = value;
+                    _price = value;
             }
         }
 
         //Show the product’s price and info , not used 
         public virtual void Examine(Product product) 
         {
-            Console.WriteLine($"{product.ProductName} <--> cost [{product.price}]kr <--> info: {product.ProductDescription}");
+           Console.WriteLine($"{product.ProductName} <--> cost [{product.Price}]kr <--> info: {product.ProductDescription}");
         }
         //Use method to to return message how to use the product
         public virtual void Use(Product product) 

@@ -9,21 +9,18 @@ namespace VendingMachineApp.Modle
     public class VendingMachine : IVending
     {
         public MoneyPool moneyPool = new MoneyPool();
-        public ProductRepo productRepo = new ProductRepo();
-
-        
 
         //Purchase, to buy a product.
-        public void Purchase(int productId) 
+        public void Purchase(int productId)
         {
-            var product = productRepo.RetrieveByProductId(productId);
-            if(product != null )
+            var product = MachineStock.GetProduct(productId);
+            if (product != null)
             {
                 if (product.Price <= moneyPool.Balance)
                 {
                     Console.WriteLine("Successful purchase, Pickup your order.");
                     moneyPool.Balance -= product.Price;
-                    productRepo.Use(product);
+                    product.Use(product);
                 }
                 else
                     Console.WriteLine($"Sorry! you don't have enugh money to buy {product.ProductName}, please Add More Money to your balance.\n" +
@@ -45,7 +42,6 @@ namespace VendingMachineApp.Modle
 
 
         //InsertMoney, add money to the pool.
-
         public bool InsertMoney(string input)
         {
             int amount = moneyPool.Validate(input);
@@ -70,16 +66,17 @@ namespace VendingMachineApp.Modle
         public void EndTransaction(MoneyPool balance) 
         {
             Console.Beep();
-            Console.WriteLine("Thank you for Useing our vending machine");
+            Console.WriteLine("Thank you for Useing our vending machine.");
             if (balance.GetBalance() != 0)
             {
-                Console.WriteLine("Your refund will be initiated shortly");
+                Console.WriteLine("Your refund will be initiated shortly.");
                 System.Threading.Thread.Sleep(3000);
                 Console.Write("Please take the refund: ");
                 moneyPool.ShowBalance();
             }
             Console.WriteLine("Good bye");
             moneyPool.ResetBalance();
+            Environment.Exit(0);
         }
     }
 }
